@@ -6,9 +6,11 @@ from pydantic import (
     AnyUrl,
     BeforeValidator,
     HttpUrl,
+    MongoDsn,
     computed_field,
     model_validator
 )
+from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Self
 
@@ -46,6 +48,21 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
+    MONGODB_SERVER: str
+    MONGODB_USER: str
+    MONGODB_PASSWORD: str
+    MONGODB_DB: str = ""
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def SQLALCHEMY_DATABASE_URI(self) -> MongoDsn:
+        return MultiHostUrl.build(
+            scheme="mongodb+srv",
+            username=self.MONGODB_USER,
+            password=self.MONGODB_PASSWORD,
+            host=self.MONGODB_SERVER,
+            path=self.MONGODB_DB,
+        )
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
