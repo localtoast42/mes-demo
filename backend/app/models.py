@@ -9,9 +9,22 @@ class UserBase(SQLModel):
     is_superuser: bool = False
 
 
+class UserCreate(UserBase):
+    password: str = Field(min_length=8, max_length=40)
+
+
+class UserUpdate(UserBase):
+    username: str | None = Field(default=None, max_length=255)
+    password: str | None = Field(default=None, min_length=8, max_length=40)
+
+
 class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
+
+
+class UserPublic(UserBase):
+    id: int
 
 
 class Part(SQLModel, table=True):
