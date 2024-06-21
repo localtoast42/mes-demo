@@ -13,6 +13,13 @@ class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=40)
 
 
+class UserRegister(SQLModel):
+    username: str = Field(max_length=255)
+    password: str = Field(min_length=8, max_length=40)
+    first_name: str | None = Field(default=None, max_length=255)
+    last_name: str | None = Field(default=None, max_length=255)
+
+
 class UserUpdate(UserBase):
     username: str | None = Field(default=None, max_length=255)
     password: str | None = Field(default=None, min_length=8, max_length=40)
