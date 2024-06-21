@@ -63,6 +63,9 @@ class Settings(BaseSettings):
             host=self.MONGODB_SERVER,
             path=self.MONGODB_DB,
         )
+    
+    FIRST_SUPERUSER: str
+    FIRST_SUPERUSER_PASSWORD: str
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
