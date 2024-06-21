@@ -60,7 +60,6 @@ class PartPublic(PartBase):
 class WorkOrderBase(SQLModel):
     status: str | None = Field(default="Unreleased")
     part_id: int | None = Field(default=None, foreign_key="part.id")
-    material_list: "MaterialList"
 
 
 class WorkOrderCreate(WorkOrderBase):
