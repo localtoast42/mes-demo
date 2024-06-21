@@ -102,3 +102,14 @@ class MaterialLine(SQLModel, table=True):
     quantity_required: int = Field(default=0)
     part_id: int | None = Field(default=None, foreign_key="part.id")
     material_list_id: int | None = Field(default=None, foreign_key="materiallist.id")
+
+
+# JSON payload containing access token
+class Token(SQLModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+# Contents of JWT token
+class TokenPayload(SQLModel):
+    sub: int | None = None
