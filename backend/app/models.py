@@ -27,6 +27,11 @@ class UserPublic(UserBase):
     id: int
 
 
+class UsersPublic(SQLModel):
+    data: list[UserPublic]
+    count: int
+
+
 class PartBase(SQLModel):
     part_number: str = Field(default=None, max_length=255)
     name: str = Field(default=None, max_length=255)
