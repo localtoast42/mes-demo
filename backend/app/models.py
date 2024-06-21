@@ -27,18 +27,40 @@ class UserPublic(UserBase):
     id: int
 
 
-class Part(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class PartBase(SQLModel):
     part_number: str = Field(default=None, max_length=255)
     name: str = Field(default=None, max_length=255)
     revision: str = Field(default=None, max_length=255)
 
 
-class WorkOrder(SQLModel, table=True):
+class PartCreate(PartBase):
+    pass
+
+
+class Part(PartBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    status: str
+
+
+class PartPublic(PartBase):
+    id: int
+
+
+class WorkOrderBase(SQLModel):
+    status: str | None = Field(default="Unreleased")
     part_id: int | None = Field(default=None, foreign_key="part.id")
     material_list: "MaterialList"
+
+
+class WorkOrderCreate(WorkOrderBase):
+    pass
+
+
+class WorkOrder(WorkOrderBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+
+class WorkOrderPublic(WorkOrderBase):
+    id: int
 
 
 class OperationLink(SQLModel, table=True):
@@ -46,15 +68,26 @@ class OperationLink(SQLModel, table=True):
     successor_id: int | None = Field(default=None, foreign_key="operation.id", primary_key=True)
 
 
-class Operation(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class OperationBase(SQLModel):
     name: str = Field(max_length=255)
-    status: str
-    description: str | None
+    number: int = Field(default=0, ge=0)
+    status: str | None = Field(default="Unreleased")
+
+
+class OperationCreate(OperationBase):
+    pass
+
+
+class Operation(OperationBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     work_order_id: int | None = Field(default=None, foreign_key="workorder.id")
     work_order: WorkOrder | None = Relationship()
     predecessors: list["Operation"] = Relationship(link_model=OperationLink)
     successors: list["Operation"] = Relationship(link_model=OperationLink)
+
+
+class OperationPublic(OperationBase):
+    id: int
 
 
 class MaterialList(SQLModel, table=True):
